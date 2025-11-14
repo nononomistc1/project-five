@@ -577,9 +577,20 @@ const App = {
                 deleteBtn.setAttribute('aria-label', `Delete category ${catName}`);
                 deleteBtn.dataset.category = catName;
                 deleteBtn.title = 'Delete category';
-                deleteBtn.addEventListener('click', (e) => {
+                deleteBtn.type = 'button';
+                
+                // Store reference to App for the event handler
+                const appInstance = App;
+                deleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
                     e.stopPropagation();
-                    this.removeCategory(catName);
+                    e.stopImmediatePropagation();
+                    const category = this.dataset.category;
+                    if (category) {
+                        appInstance.removeCategory(category).catch(err => {
+                            console.error('Error removing category:', err);
+                        });
+                    }
                 });
                 btnContainer.appendChild(deleteBtn);
             }
@@ -643,13 +654,24 @@ const App = {
         
         // Also set up listeners for buttons in containers
         document.querySelectorAll('.category-btn-container .category-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Don't trigger if clicking delete button
-                if (e.target.classList.contains('category-delete-btn')) {
+            // Remove any existing listeners first
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', (e) => {
+                // Don't trigger if clicking delete button or if delete button was clicked
+                if (e.target.classList.contains('category-delete-btn') || 
+                    e.target.closest('.category-delete-btn')) {
                     return;
                 }
                 
-                const category = btn.dataset.category;
+                // Don't trigger if event came from delete button
+                const deleteBtn = e.target.parentElement?.querySelector('.category-delete-btn');
+                if (deleteBtn && (deleteBtn === e.relatedTarget || deleteBtn.contains(e.target))) {
+                    return;
+                }
+                
+                const category = newBtn.dataset.category;
                 if (category === 'all' || this.isValidCategory(category)) {
                     this.currentCategory = category;
                     this.filters.category = category === 'all' ? 'all' : category;
