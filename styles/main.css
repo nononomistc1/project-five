@@ -256,6 +256,7 @@ body {
     gap: var(--spacing-sm);
     flex-wrap: wrap;
     margin-bottom: var(--spacing-md);
+    align-items: center;
 }
 
 .category-btn {
@@ -292,6 +293,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
+    min-width: 0;
 }
 
 .category-delete-btn {

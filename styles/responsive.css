@@ -39,11 +39,30 @@
 
     .category-bar {
         gap: var(--spacing-xs);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    .category-btn-container {
+        flex: 1 1 calc(50% - var(--spacing-xs));
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .category-btn-container .category-btn {
+        width: 100%;
+        flex: 1;
+        text-align: center;
+        min-width: 0;
     }
 
     .category-btn {
         flex: 1 1 calc(50% - var(--spacing-xs));
         text-align: center;
+        min-width: 0;
     }
 
     .category-btn.add-category {
