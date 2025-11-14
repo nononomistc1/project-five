@@ -6,7 +6,7 @@
   publish = "todo-app"
   
   # Base directory for all paths
-  base = "todo-app"
+  base = "/"
 
 [[redirects]]
   # Redirect root to index.html if needed
