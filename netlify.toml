@@ -1,0 +1,16 @@
+# Netlify configuration file
+# This file helps Netlify know where your site files are located
+
+[build]
+  # No build process needed - this is a static site
+  publish = "todo-app"
+  
+  # Base directory for all paths
+  base = "todo-app"
+
+[[redirects]]
+  # Redirect root to index.html if needed
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
