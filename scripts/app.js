@@ -32,6 +32,11 @@ const App = {
         // Request notification permission
         await Utils.requestNotificationPermission();
         
+        // Initialize category UI with any saved custom categories
+        this.updateCategoryOptions();
+        this.updateCategoryFilter();
+        this.updateCategoryBar();
+        
         // Render tasks
         this.render();
         
