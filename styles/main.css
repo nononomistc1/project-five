@@ -97,6 +97,7 @@ body {
     font-family: var(--font-family);
     font-weight: 700;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    padding: var(--spacing-xs) 0;
 }
 
 .logo-to {
@@ -105,14 +106,15 @@ body {
     line-height: 1;
     position: relative;
     z-index: 1;
+    letter-spacing: -0.5px;
 }
 
 .logo-checkmark {
     position: absolute;
-    top: -8px;
-    left: 0;
-    width: 80px;
-    height: 50px;
+    top: -5px;
+    left: -5px;
+    width: 90px;
+    height: 55px;
     z-index: 2;
     pointer-events: none;
 }
@@ -121,9 +123,10 @@ body {
     font-size: var(--font-size-2xl);
     color: #14b8a6;
     line-height: 1;
-    margin-left: 0;
+    margin-left: 2px;
     position: relative;
     z-index: 1;
+    letter-spacing: -0.5px;
 }
 
 .header-actions {
