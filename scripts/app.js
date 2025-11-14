@@ -73,7 +73,14 @@ const App = {
         // Category buttons
         UI.elements.categoryButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const category = e.target.dataset.category;
+                // Check if this is the add category button
+                if (btn.id === 'add-category-btn' || btn.classList.contains('add-category')) {
+                    e.stopPropagation();
+                    UI.showModal('category-modal');
+                    return;
+                }
+                
+                const category = btn.dataset.category;
                 if (category === 'all' || this.isValidCategory(category)) {
                     this.currentCategory = category;
                     this.filters.category = category === 'all' ? 'all' : category;
