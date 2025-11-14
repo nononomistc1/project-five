@@ -70,25 +70,8 @@ const App = {
             this.render();
         });
 
-        // Category buttons
-        UI.elements.categoryButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Check if this is the add category button
-                if (btn.id === 'add-category-btn' || btn.classList.contains('add-category')) {
-                    e.stopPropagation();
-                    UI.showModal('category-modal');
-                    return;
-                }
-                
-                const category = btn.dataset.category;
-                if (category === 'all' || this.isValidCategory(category)) {
-                    this.currentCategory = category;
-                    this.filters.category = category === 'all' ? 'all' : category;
-                    UI.updateActiveCategory(category);
-                    this.render();
-                }
-            });
-        });
+        // Category buttons - use the setup function
+        this.setupCategoryButtonListeners();
 
         // Theme toggle
         UI.elements.themeToggle.addEventListener('click', () => {
@@ -484,8 +467,10 @@ const App = {
         settings.customCategories.push({ name, color });
         Storage.saveSettings(settings);
 
-        // Update category select options
+        // Update category options in all UI elements
         this.updateCategoryOptions();
+        this.updateCategoryBar();
+        this.updateCategoryFilter();
 
         // Clear and close modal
         UI.elements.newCategoryName.value = '';
@@ -500,12 +485,125 @@ const App = {
         const settings = Storage.loadSettings();
         const categories = [...(settings.categories || []), ...(settings.customCategories || [])];
         
-        // Update select options
+        // Update task category select dropdown
         const categorySelect = UI.elements.taskCategory;
         categorySelect.innerHTML = categories.map(cat => {
             const name = typeof cat === 'string' ? cat : cat.name;
             return `<option value="${name}">${Utils.getCategoryName(name)}</option>`;
         }).join('');
+    },
+
+    /**
+     * Update category filter dropdown
+     */
+    updateCategoryFilter() {
+        const settings = Storage.loadSettings();
+        const categories = [...(settings.categories || []), ...(settings.customCategories || [])];
+        
+        // Update category filter dropdown
+        const categoryFilter = UI.elements.categoryFilter;
+        const currentValue = categoryFilter.value;
+        
+        categoryFilter.innerHTML = '<option value="all">All Categories</option>' + 
+            categories.map(cat => {
+                const name = typeof cat === 'string' ? cat : cat.name;
+                return `<option value="${name}">${Utils.getCategoryName(name)}</option>`;
+            }).join('');
+        
+        // Restore selected value if it still exists
+        if (currentValue && Array.from(categoryFilter.options).some(opt => opt.value === currentValue)) {
+            categoryFilter.value = currentValue;
+        }
+    },
+
+    /**
+     * Update category bar buttons
+     */
+    updateCategoryBar() {
+        const settings = Storage.loadSettings();
+        const categories = [...(settings.categories || []), ...(settings.customCategories || [])];
+        const categoryBar = document.querySelector('.category-bar');
+        
+        if (!categoryBar) return;
+        
+        // Get the add category button to preserve it
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        
+        // Clear existing category buttons (except "All" which we'll keep)
+        const allBtn = categoryBar.querySelector('[data-category="all"]');
+        categoryBar.innerHTML = '';
+        
+        // Add "All" button back
+        if (allBtn) {
+            allBtn.classList.add('active');
+            categoryBar.appendChild(allBtn);
+        } else {
+            const allButton = document.createElement('button');
+            allButton.className = 'category-btn active';
+            allButton.dataset.category = 'all';
+            allButton.textContent = 'All';
+            categoryBar.appendChild(allButton);
+        }
+        
+        // Add all category buttons
+        categories.forEach(cat => {
+            const catName = typeof cat === 'string' ? cat : cat.name;
+            const catColor = typeof cat === 'object' && cat.color ? cat.color : Utils.getCategoryColor(catName);
+            
+            const btn = document.createElement('button');
+            btn.className = 'category-btn';
+            btn.dataset.category = catName;
+            btn.textContent = Utils.getCategoryName(catName);
+            categoryBar.appendChild(btn);
+        });
+        
+        // Add the add category button back
+        if (addCategoryBtn) {
+            categoryBar.appendChild(addCategoryBtn);
+        } else {
+            const addBtn = document.createElement('button');
+            addBtn.className = 'category-btn add-category';
+            addBtn.id = 'add-category-btn';
+            addBtn.setAttribute('aria-label', 'Add new category');
+            addBtn.textContent = '+ Add Category';
+            categoryBar.appendChild(addBtn);
+        }
+        
+        // Re-attach event listeners to new buttons
+        UI.elements.categoryButtons = document.querySelectorAll('.category-btn');
+        this.setupCategoryButtonListeners();
+    },
+
+    /**
+     * Set up event listeners for category buttons
+     */
+    setupCategoryButtonListeners() {
+        UI.elements.categoryButtons.forEach(btn => {
+            // Remove existing listeners by cloning the button
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', (e) => {
+                // Check if this is the add category button
+                if (newBtn.id === 'add-category-btn' || newBtn.classList.contains('add-category')) {
+                    e.stopPropagation();
+                    UI.showModal('category-modal');
+                    return;
+                }
+                
+                const category = newBtn.dataset.category;
+                if (category === 'all' || this.isValidCategory(category)) {
+                    this.currentCategory = category;
+                    this.filters.category = category === 'all' ? 'all' : category;
+                    UI.updateActiveCategory(category);
+                    this.render();
+                }
+            });
+        });
+        
+        // Update the UI.elements reference
+        UI.elements.categoryButtons = document.querySelectorAll('.category-btn');
+        UI.elements.addCategoryBtn = document.getElementById('add-category-btn');
     },
 
     /**
