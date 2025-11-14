@@ -1,0 +1,101 @@
+/**
+ * Themes CSS
+ * Dark and light mode theme styles
+ */
+
+/* Light Theme (Default) */
+body.theme-light {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --danger-color: #f44336;
+    --warning-color: #FF9800;
+    --text-color: #333;
+    --text-secondary: #666;
+    --bg-color: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --border-color: #e0e0e0;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme */
+body.theme-dark {
+    --primary-color: #66BB6A;
+    --secondary-color: #42A5F5;
+    --danger-color: #EF5350;
+    --warning-color: #FFA726;
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --bg-color: #1e1e1e;
+    --bg-secondary: #2d2d2d;
+    --border-color: #404040;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Theme Transition */
+body,
+.app-container,
+.task-item,
+.modal-content,
+.btn-primary,
+.btn-secondary,
+.input-group,
+.search-input,
+.filter-select,
+.task-input,
+.category-btn {
+    transition: background-color var(--transition-base),
+                color var(--transition-base),
+                border-color var(--transition-base);
+}
+
+/* Dark Theme Specific Adjustments */
+body.theme-dark .task-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-dark .task-item.overdue {
+    background-color: rgba(239, 83, 80, 0.1);
+}
+
+body.theme-dark .modal {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+body.theme-dark .task-text mark {
+    background-color: #ffc107;
+    color: #000;
+}
+
+body.theme-dark .progress-bar {
+    background-color: var(--bg-color);
+}
+
+body.theme-dark .search-container .search-icon,
+body.theme-dark .task-drag-handle {
+    color: var(--text-secondary);
+}
+
+/* Theme Toggle Button */
+#theme-toggle {
+    transition: transform var(--transition-base);
+}
+
+#theme-toggle:hover {
+    transform: rotate(15deg);
+}
+
+.theme-icon {
+    font-size: 1.2rem;
+    transition: transform var(--transition-base);
+}
+
+/* Ensure proper contrast in dark mode */
+body.theme-dark .stat-value,
+body.theme-dark .app-title {
+    color: var(--text-color);
+}
+
+body.theme-dark .empty-message {
+    color: var(--text-secondary);
+}
+

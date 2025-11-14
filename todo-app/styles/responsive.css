@@ -1,0 +1,351 @@
+/**
+ * Responsive CSS
+ * Mobile-first responsive design
+ */
+
+/* Mobile First - Base styles are for mobile */
+
+@media (max-width: 575px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .search-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-container {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    .category-bar {
+        gap: var(--spacing-xs);
+    }
+
+    .category-btn {
+        flex: 1 1 calc(50% - var(--spacing-xs));
+        text-align: center;
+    }
+
+    .category-btn.add-category {
+        flex: 1 1 100%;
+    }
+
+    .input-options {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .input-options .btn-primary {
+        width: 100%;
+    }
+
+    .data-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .data-actions .btn-secondary,
+    .data-actions .import-label {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .search-filter-bar {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-container {
+        flex: 1 1 40%;
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-select {
+        flex: 1 1 50%;
+    }
+
+    .input-options {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .input-options .btn-primary {
+        flex: 1 1 100%;
+    }
+
+    .data-actions {
+        justify-content: flex-start;
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .app-container {
+        padding: var(--spacing-lg);
+    }
+
+    .search-filter-bar {
+        flex-wrap: nowrap;
+    }
+
+    .input-options {
+        flex-wrap: nowrap;
+    }
+
+    .task-content {
+        align-items: center;
+    }
+
+    .data-actions {
+        justify-content: flex-start;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .app-container {
+        padding: var(--spacing-xl);
+    }
+
+    .header-content {
+        flex-wrap: nowrap;
+    }
+
+    .search-filter-bar {
+        gap: var(--spacing-lg);
+    }
+
+    .filter-container {
+        gap: var(--spacing-md);
+    }
+
+    .category-bar {
+        gap: var(--spacing-md);
+    }
+
+    .progress-stats {
+        justify-content: space-between;
+    }
+
+    .input-group {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .task-input {
+        flex: 1;
+    }
+
+    .input-options {
+        flex-shrink: 0;
+    }
+
+    .task-item {
+        padding: var(--spacing-lg);
+    }
+
+    .task-actions {
+        opacity: 0;
+        transition: opacity var(--transition-base);
+    }
+
+    .task-item:hover .task-actions {
+        opacity: 1;
+    }
+
+    .modal-content {
+        max-width: 600px;
+        padding: var(--spacing-xl);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .app-container {
+        max-width: 1200px;
+        padding: var(--spacing-xl) var(--spacing-xl);
+    }
+
+    .app-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .search-filter-bar {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .progress-section {
+        padding: var(--spacing-lg);
+    }
+
+    .task-form {
+        padding: var(--spacing-lg);
+    }
+
+    .tasks-container {
+        gap: var(--spacing-md);
+    }
+
+    .task-item {
+        padding: var(--spacing-lg) var(--spacing-xl);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .app-container {
+        padding: var(--spacing-xl) var(--spacing-xl);
+    }
+
+    .controls-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .search-filter-bar {
+        grid-column: 1 / -1;
+    }
+
+    .category-bar {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Footer responsive styles */
+@media (max-width: 575px) {
+    .footer-links {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .footer-link {
+        width: 100%;
+        justify-content: center;
+        padding: var(--spacing-sm);
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .btn-icon,
+    .category-btn,
+    .task-actions .btn-icon {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .task-checkbox {
+        width: 24px;
+        height: 24px;
+    }
+
+    .task-drag-handle {
+        padding: var(--spacing-sm);
+        font-size: 1.2rem;
+    }
+
+    .task-actions {
+        opacity: 1;
+    }
+
+    .search-input,
+    .task-input,
+    .filter-select,
+    .task-category-select,
+    .task-due-date {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+
+/* Print styles */
+@media print {
+    .app-header .header-actions,
+    .controls-section,
+    .task-input-section,
+    .data-management-section,
+    .task-actions,
+    .task-drag-handle {
+        display: none;
+    }
+
+    .task-item {
+        break-inside: avoid;
+        border: 1px solid #000;
+    }
+
+    .task-item.completed {
+        opacity: 0.5;
+    }
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .task-item {
+        border-width: 3px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        border-width: 2px;
+    }
+
+    .category-btn.active {
+        border-width: 3px;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .app-header {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .progress-section {
+        padding: var(--spacing-sm);
+    }
+
+    .progress-stats {
+        gap: var(--spacing-sm);
+    }
+
+    .stat-value {
+        font-size: var(--font-size-lg);
+    }
+}
+
