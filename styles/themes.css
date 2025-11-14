@@ -90,9 +90,21 @@ body.theme-dark .task-drag-handle {
 }
 
 /* Ensure proper contrast in dark mode */
-body.theme-dark .stat-value,
-body.theme-dark .app-title {
+body.theme-dark .stat-value {
     color: var(--text-color);
+}
+
+/* Logo colors stay consistent in both themes */
+body.theme-dark .logo-to {
+    color: #3b82f6;
+}
+
+body.theme-dark .logo-doo {
+    color: #06b6d4;
+}
+
+body.theme-dark .logo-checkmark path {
+    stroke: #10b981;
 }
 
 body.theme-dark .empty-message {

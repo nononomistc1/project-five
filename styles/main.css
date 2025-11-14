@@ -84,14 +84,46 @@ body {
 .app-title {
     font-size: var(--font-size-2xl);
     font-weight: 700;
-    color: var(--text-color);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 0;
+    margin: 0;
 }
 
-.app-title .icon {
-    font-size: var(--font-size-xl);
+.logo {
+    display: flex;
+    align-items: center;
+    position: relative;
+    font-family: var(--font-family);
+    font-weight: 700;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.logo-to {
+    font-size: var(--font-size-2xl);
+    color: #1e3a8a;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.logo-checkmark {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 80px;
+    height: 50px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.logo-doo {
+    font-size: var(--font-size-2xl);
+    color: #14b8a6;
+    line-height: 1;
+    margin-left: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .header-actions {
