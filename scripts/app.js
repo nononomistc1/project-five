@@ -554,12 +554,37 @@ const App = {
         categories.forEach(cat => {
             const catName = typeof cat === 'string' ? cat : cat.name;
             const catColor = typeof cat === 'object' && cat.color ? cat.color : Utils.getCategoryColor(catName);
+            const isCustomCategory = typeof cat === 'object' && cat.name;
+            
+            // Create container for category button and delete button
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'category-btn-container';
+            btnContainer.style.position = 'relative';
+            btnContainer.style.display = 'inline-flex';
+            btnContainer.style.alignItems = 'center';
             
             const btn = document.createElement('button');
             btn.className = 'category-btn';
             btn.dataset.category = catName;
             btn.textContent = Utils.getCategoryName(catName);
-            categoryBar.appendChild(btn);
+            btnContainer.appendChild(btn);
+            
+            // Add delete button for custom categories only (not default ones)
+            if (isCustomCategory) {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'category-delete-btn';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.setAttribute('aria-label', `Delete category ${catName}`);
+                deleteBtn.dataset.category = catName;
+                deleteBtn.title = 'Delete category';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.removeCategory(catName);
+                });
+                btnContainer.appendChild(deleteBtn);
+            }
+            
+            categoryBar.appendChild(btnContainer);
         });
         
         // Add the add category button back
@@ -584,11 +609,21 @@ const App = {
      */
     setupCategoryButtonListeners() {
         UI.elements.categoryButtons.forEach(btn => {
+            // Skip if button is inside a container (already has listeners)
+            if (btn.closest('.category-btn-container')) {
+                return;
+            }
+            
             // Remove existing listeners by cloning the button
             const newBtn = btn.cloneNode(true);
             btn.parentNode.replaceChild(newBtn, btn);
             
             newBtn.addEventListener('click', (e) => {
+                // Don't trigger if clicking delete button
+                if (e.target.classList.contains('category-delete-btn')) {
+                    return;
+                }
+                
                 // Check if this is the add category button
                 if (newBtn.id === 'add-category-btn' || newBtn.classList.contains('add-category')) {
                     e.stopPropagation();
@@ -606,9 +641,95 @@ const App = {
             });
         });
         
+        // Also set up listeners for buttons in containers
+        document.querySelectorAll('.category-btn-container .category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Don't trigger if clicking delete button
+                if (e.target.classList.contains('category-delete-btn')) {
+                    return;
+                }
+                
+                const category = btn.dataset.category;
+                if (category === 'all' || this.isValidCategory(category)) {
+                    this.currentCategory = category;
+                    this.filters.category = category === 'all' ? 'all' : category;
+                    UI.updateActiveCategory(category);
+                    this.render();
+                }
+            });
+        });
+        
         // Update the UI.elements reference
         UI.elements.categoryButtons = document.querySelectorAll('.category-btn');
         UI.elements.addCategoryBtn = document.getElementById('add-category-btn');
+    },
+
+    /**
+     * Remove a category
+     * @param {String} categoryName - Category name to remove
+     */
+    async removeCategory(categoryName) {
+        // Check if it's a default category (cannot be removed)
+        const settings = Storage.loadSettings();
+        const defaultCategories = settings.categories || [];
+        if (defaultCategories.includes(categoryName)) {
+            alert('Default categories cannot be removed.');
+            return;
+        }
+        
+        // Check if any tasks use this category
+        const tasksWithCategory = this.tasks.filter(task => task.category === categoryName);
+        
+        if (tasksWithCategory.length > 0) {
+            const confirmed = await UI.showConfirmation(
+                'Delete Category',
+                `This category is used by ${tasksWithCategory.length} task(s). ` +
+                `Tasks will be reassigned to "Personal". Do you want to continue?`
+            );
+            
+            if (!confirmed) {
+                return;
+            }
+            
+            // Reassign tasks to "Personal"
+            tasksWithCategory.forEach(task => {
+                task.category = 'personal';
+                task.updatedAt = new Date().toISOString();
+            });
+            this.saveTasks();
+        } else {
+            const confirmed = await UI.showConfirmation(
+                'Delete Category',
+                `Are you sure you want to delete the category "${Utils.getCategoryName(categoryName)}"?`
+            );
+            
+            if (!confirmed) {
+                return;
+            }
+        }
+        
+        // Remove category from settings
+        if (settings.customCategories) {
+            settings.customCategories = settings.customCategories.filter(
+                cat => cat.name !== categoryName
+            );
+            Storage.saveSettings(settings);
+        }
+        
+        // Update all UI elements
+        this.updateCategoryOptions();
+        this.updateCategoryBar();
+        this.updateCategoryFilter();
+        
+        // If this category was active, switch to "All"
+        if (this.filters.category === categoryName || this.currentCategory === categoryName) {
+            this.currentCategory = 'all';
+            this.filters.category = 'all';
+            UI.updateActiveCategory('all');
+        }
+        
+        // Re-render tasks
+        this.render();
     },
 
     /**
